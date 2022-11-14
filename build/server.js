@@ -6,12 +6,24 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const app_1 = __importDefault(require("./src/app"));
 const config_env_1 = __importDefault(require("./src/config.env"));
 const socket_io_1 = require("socket.io");
+const connection_1 = __importDefault(require("./src/db/config/connection"));
+const associate_1 = __importDefault(require("./src/db/config/associate"));
 const cluster_1 = __importDefault(require("cluster"));
 const redis_1 = require("redis");
 const redis_adapter_1 = require("@socket.io/redis-adapter");
 const os_1 = __importDefault(require("os"));
 const numCPUs = os_1.default.cpus().length;
 const sticky_1 = require("@socket.io/sticky");
+if (config_env_1.default.NODE_ENV !== 'test') {
+    connection_1.default.authenticate().then(() => {
+        (0, associate_1.default)();
+        console.log('DB CONNECTED');
+    }).catch((error) => {
+        console.error(error);
+        console.log('DB CONNECTION FAIL');
+        process.exit(0);
+    });
+}
 if (cluster_1.default.isMaster) {
     console.log(`Master ${process.pid} is running`);
     (0, sticky_1.setupMaster)(app_1.default, {
