@@ -24,7 +24,7 @@ function checkStorage() {
     let field = localStorage.getItem('field');
     let user = localStorage.getItem('user');
 
-    if (!field.replace(/dungeon|village/) || !user || user==='{}') {
+    if (!field.match(/dungeon|village/) || !user || user==='{}') {
         field = 'none';
         user = '{}';
     }
@@ -42,7 +42,7 @@ function checkValidation(user) {
 ******************************************************************************/
 
 function loadScript(field, user) {
-    if (field.replace === 'none' || user === '{}') {
+    if (field.match === 'none' || user === '{}') {
         return server.emit('none', { line: 'LOAD', user: {} });
     }
     server.emit('dungeon', { line: 'LOAD', user: JSON.parse(user) });
@@ -177,7 +177,7 @@ const chatNewMessage = ({ script, field }) => {
 chatForm.submit((e) => {
     e.preventDefault();
     const field = localStorage.getItem('field').split(':')[0];
-    if (!field.replace(/dungeon|village/)) return chatInput.val('');
+    if (!field.match(/dungeon|village/)) return chatInput.val('');
     
     const user = localStorage.getItem('user');
     const { name } = JSON.parse(user);
