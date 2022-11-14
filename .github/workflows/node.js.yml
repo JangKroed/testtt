@@ -24,7 +24,10 @@ jobs:
         node-version: ${{ matrix.node-version }}
         cache: 'npm'
     - run: npm ci
+      
+    - name: build
       run: npm run build
+      
       run: |
         touch ./build/.env
         echo "PORT=${{ secrets.PORT }}"
