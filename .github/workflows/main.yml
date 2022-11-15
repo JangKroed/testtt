@@ -2,10 +2,10 @@ name: Deploy to EB
 
 # main branch에 push 되면 실행
 on:
-    push:
-        branches: ['main']
-    pull_request:
-        branches: ['main']
+  push:
+      branches: ['main']
+  pull_request:
+      branches: ['main']
 
   jobs:
     build:
