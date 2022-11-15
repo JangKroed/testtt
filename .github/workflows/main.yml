@@ -92,7 +92,7 @@ jobs:
             # Make ZIP file with source code
             # -x는 zip파일 생성 시에 해당 부분들을 제외한다.
             - name: Generate deployment package
-              run: zip -r deploy.zip . -x '*.git*' './src/*' './__test__/*' awscliv2.zip
+              run: zip -r deploy.zip . -x '*.git*' './__test__/*' awscliv2.zip
 
             - name: Get timestamp
               uses: gerred/actions/current-time@master

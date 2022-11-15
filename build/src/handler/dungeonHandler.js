@@ -14,7 +14,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.dungeonList = void 0;
 const dungeon_service_1 = __importDefault(require("../services/dungeon.service"));
-const config_1 = __importDefault(require("../db/redis/config"));
+const cache_1 = require("../db/cache");
 const handler_1 = require("../handler");
 const scripts_1 = require("../scripts");
 exports.default = {
@@ -67,12 +67,14 @@ exports.default = {
             tempScript += `2. [자동] 전투 진행\n`;
             tempScript += `3. [돌]아가기\n`;
             // 던전 진행상황 업데이트
-            const dungeonSession = {
-                dungeonLevel: Number(CMD),
-                characterId: Number(user.characterId),
-                monsterId: 0,
-            };
-            config_1.default.hSet(String(user.characterId), dungeonSession);
+            // const dungeonSession = {
+            //     dungeonLevel: Number(CMD),
+            //     monsterId: 0,
+            // };
+            const dungeonLevel = CMD;
+            const characterId = user.characterId.toString();
+            cache_1.redis.hSet(characterId, { dungeonLevel });
+            // battleCache.set(user.characterId, { dungeonLevel: +CMD! })
             nextField = 'battle';
         }
         const script = tempLine + tempScript;

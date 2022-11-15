@@ -8,13 +8,10 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
         step((generator = generator.apply(thisArg, _arguments || [])).next());
     });
 };
-var __importDefault = (this && this.__importDefault) || function (mod) {
-    return (mod && mod.__esModule) ? mod : { "default": mod };
-};
 Object.defineProperty(exports, "__esModule", { value: true });
 const services_1 = require("../../services");
 const models_1 = require("../../db/models");
-const config_1 = __importDefault(require("../../db/redis/config"));
+const cache_1 = require("../../db/cache");
 const scripts_1 = require("../../scripts");
 exports.default = {
     signinUsername: (CMD, user) => {
@@ -40,7 +37,7 @@ exports.default = {
         };
         // await redis.hSet(id, userSession);
         const data = JSON.stringify(userSession);
-        yield config_1.default.set(id, data, { EX: 60 * 5 });
+        yield cache_1.redis.set(id, data, { EX: 60 * 5 });
         if (character) {
             const characterSession = yield models_1.Characters.getSessionData(character);
             user = Object.assign(user, characterSession);

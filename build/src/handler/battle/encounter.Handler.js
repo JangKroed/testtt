@@ -8,16 +8,10 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
         step((generator = generator.apply(thisArg, _arguments || [])).next());
     });
 };
-var __importDefault = (this && this.__importDefault) || function (mod) {
-    return (mod && mod.__esModule) ? mod : { "default": mod };
-};
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.battleLoops = void 0;
 const services_1 = require("../../services");
-const config_1 = __importDefault(require("../../db/redis/config"));
-const battle_Handler_1 = __importDefault(require("./battle.Handler"));
-const handler_1 = require("../../handler");
-const socket_routes_1 = require("../../socket.routes");
+const cache_1 = require("../../db/cache");
 class EncounterHandler {
     constructor() {
         // help: (CMD: string | undefined, user: UserSession) => {}
@@ -36,88 +30,37 @@ class EncounterHandler {
         this.encounter = (CMD, user) => __awaiter(this, void 0, void 0, function* () {
             // 던전 진행상황 불러오기
             const { characterId } = user;
-            let dungeonSession = yield config_1.default.hGetAll(String(characterId));
-            const dungeonLevel = Number(dungeonSession.dungeonLevel);
+            const { dungeonLevel } = yield cache_1.redis.hGetAll(characterId);
             let tempScript = '';
             const tempLine = '=======================================================================\n';
             // 적 생성
-            const newMonster = yield services_1.MonsterService.createNewMonster(dungeonLevel, characterId);
-            tempScript += `너머에 ${newMonster.name}의 그림자가 보인다\n\n`;
+            const { name, monsterId } = yield services_1.MonsterService.createNewMonster(dungeonLevel, characterId);
+            tempScript += `너머에 ${name}의 그림자가 보인다\n\n`;
             tempScript += `[공격] 하기\n`;
             tempScript += `[도망] 가기\n`;
             // 던전 진행상황 업데이트
-            dungeonSession = {
-                dungeonLevel: dungeonLevel.toString(),
-                monsterId: newMonster.monsterId.toString(),
-            };
-            yield config_1.default.hSet(String(characterId), dungeonSession);
+            yield cache_1.redis.hSet(characterId, { monsterId });
             const script = tempLine + tempScript;
             const field = 'encounter';
             return { script, user, field };
-        });
-        this.attack = (CMD, user) => __awaiter(this, void 0, void 0, function* () {
-            const whoIsDead = {
-                // back to dungeon list when player died
-                player: handler_1.dungeon.getDungeonList,
-                // back to encounter phase when monster died
-                monster: this.reEncounter,
-            };
-            const { characterId } = user;
-            const autoAttckId = setInterval(() => __awaiter(this, void 0, void 0, function* () {
-                const { script, field, user: newUser, dead } = yield battle_Handler_1.default.autoAttack(CMD, user);
-                socket_routes_1.socket.emit('printBattle', { script, field, user: newUser });
-                // dead = 'moster'|'player'|undefined
-                if (dead) {
-                    const result = yield whoIsDead[dead]('', newUser);
-                    socket_routes_1.socket.emit('print', result);
-                    console.log('DEAD PRINT WILL CLOSE INTERVAL');
-                    clearInterval(exports.battleLoops.get(characterId));
-                    exports.battleLoops.delete(characterId);
-                    console.log('INTERVAL CLOSED');
-                    return;
-                }
-            }), 1500);
-            exports.battleLoops.set(characterId, autoAttckId);
-            return { script: '', user, field: 'action', cooldown: Date.now() - 2000 };
         });
         this.reEncounter = (CMD, user) => __awaiter(this, void 0, void 0, function* () {
             // 던전 진행상황 불러오기
             const { characterId } = user;
-            let dungeonSession = yield config_1.default.hGetAll(String(characterId));
-            const dungeonLevel = Number(dungeonSession.dungeonLevel);
+            const { dungeonLevel } = yield cache_1.redis.hGetAll(characterId);
+            // const { dungeonLevel } = battleCache.get(characterId);
             let tempScript = '';
             const tempLine = '=======================================================================\n';
             // 적 생성
-            const newMonster = yield services_1.MonsterService.createNewMonster(dungeonLevel, characterId);
-            tempScript += `너머에 ${newMonster.name}의 그림자가 보인다\n\n`;
+            const { name, monsterId } = yield services_1.MonsterService.createNewMonster(dungeonLevel, characterId);
+            tempScript += `너머에 ${name}의 그림자가 보인다\n\n`;
             tempScript += `[공격] 하기\n`;
             tempScript += `[도망] 가기\n`;
             // 던전 진행상황 업데이트
-            dungeonSession = {
-                dungeonLevel: String(dungeonLevel),
-                monsterId: String(newMonster.monsterId),
-            };
-            yield config_1.default.hSet(String(user.characterId), dungeonSession);
+            yield cache_1.redis.hSet(characterId, { monsterId });
             const script = tempLine + tempScript;
             const field = 'encounter';
             user = yield services_1.CharacterService.addExp(characterId, 0);
-            return { script, user, field };
-        });
-        this.run = (CMD, user) => __awaiter(this, void 0, void 0, function* () {
-            console.log('도망 실행');
-            const dungeonSession = yield config_1.default.hGetAll(String(user.characterId));
-            let tempScript = '';
-            const tempLine = '=======================================================================\n';
-            tempScript += `... 몬스터와 눈이 마주친 순간,\n`;
-            tempScript += `당신은 던전 입구를 향해 필사적으로 뒷걸음질쳤습니다.\n\n`;
-            tempScript += `??? : 하남자특. 도망감.\n\n`;
-            tempScript += `목록 - 던전 목록을 불러옵니다.\n`;
-            tempScript += `입장 [number] - 선택한 번호의 던전에 입장합니다.\n\n`;
-            // 몬스터 삭제
-            // await MonsterService.destroyMonster(Number(dungeonSession.monsterId));
-            yield config_1.default.hDel(String(user.userId), 'monsterId');
-            const script = tempLine + tempScript;
-            const field = 'dungeon';
             return { script, user, field };
         });
         this.ewrongCommand = (CMD, user) => {

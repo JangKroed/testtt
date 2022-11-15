@@ -11,6 +11,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 Object.defineProperty(exports, "__esModule", { value: true });
 const socket_routes_1 = require("../socket.routes");
 const handler_1 = require("../handler");
+const cache_1 = require("../db/cache");
 exports.default = {
     battleController: ({ line, user }) => __awaiter(void 0, void 0, void 0, function* () {
         const [CMD1, CMD2] = line.trim().split(' ');
@@ -49,21 +50,35 @@ exports.default = {
     }),
     actionController: ({ line, user, option }) => __awaiter(void 0, void 0, void 0, function* () {
         const [CMD1, CMD2] = line.trim().split(' ');
+        const characterId = user.characterId.toString();
         /**
          * action:time
          * 타임스탬프를 함께 전달하고 이를 바탕으로 스킬 재사용 가능여부 판별
          */
+        if (CMD1 === '중단') {
+            const result = yield handler_1.battle.quitAutoBattle('', user);
+            const field = result.field === 'action' ? 'printBattle' : 'print';
+            socket_routes_1.socket.emit(field, result);
+        }
         const result = yield handler_1.battle.actionSkill(CMD1, user);
         if (Object.hasOwn(result, 'error')) {
             return socket_routes_1.socket.emit('print', result);
         }
-        if (!result.dead) {
-            result.cooldown = Date.now();
-            return socket_routes_1.socket.emit('printBattle', result);
+        const { dungeonLevel, dead } = yield cache_1.redis.hGetAll(characterId);
+        if (dead) {
+            const { autoAttackId } = cache_1.battleCache.get(characterId);
+            clearInterval(autoAttackId);
+            cache_1.battleCache.delete(characterId);
+            // battleCache.set(characterId, { dungeonLevel });
+            yield cache_1.redis.hDelBattleCache(characterId);
+            yield cache_1.redis.hSet(characterId, { dungeonLevel });
+            const deadResult = yield handler_1.battle.reEncounter('', result.user);
+            deadResult.script = result.script + deadResult.script;
+            socket_routes_1.socket.emit('print', deadResult);
+            return;
         }
-        const deadResult = yield handler_1.battle.reEncounter('', result.user);
-        deadResult.script = result.script + deadResult.script;
-        socket_routes_1.socket.emit('print', deadResult);
+        result.cooldown = Date.now();
+        return socket_routes_1.socket.emit('printBattle', result);
     }),
     autoBattleController: ({ line, user }) => __awaiter(void 0, void 0, void 0, function* () {
         const [CMD1, CMD2] = line.trim().split(' ');

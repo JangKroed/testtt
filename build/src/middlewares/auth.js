@@ -8,11 +8,8 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
         step((generator = generator.apply(thisArg, _arguments || [])).next());
     });
 };
-var __importDefault = (this && this.__importDefault) || function (mod) {
-    return (mod && mod.__esModule) ? mod : { "default": mod };
-};
 Object.defineProperty(exports, "__esModule", { value: true });
-const config_1 = __importDefault(require("../db/redis/config"));
+const cache_1 = require("../db/cache");
 const common_1 = require("../common");
 /**
  *
@@ -28,7 +25,7 @@ exports.default = {
             throw new common_1.HttpException('잘못된 접근입니다', common_1.HttpStatus.BAD_REQUEST);
         }
         console.log(ip);
-        const sessionData = yield config_1.default.get(ip);
+        const sessionData = yield cache_1.redis.get(ip);
         if (!sessionData) {
             req.app.locals.user = null;
             return res.redirect('/');

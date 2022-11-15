@@ -18,7 +18,7 @@ class CharacterService {
     findByPk(characterId) {
         return __awaiter(this, void 0, void 0, function* () {
             const character = yield models_1.Characters.findOne({
-                where: { characterId },
+                where: { characterId: Number(characterId) },
                 include: [models_1.Users, models_1.Fields, models_1.Titles],
             });
             if (!character)
@@ -30,7 +30,7 @@ class CharacterService {
     findOneByUserId(userId) {
         return __awaiter(this, void 0, void 0, function* () {
             const result = yield models_1.Characters.findOne({
-                where: { userId }
+                where: { userId: Number(userId) }
             });
             if (!result) {
                 return null;
@@ -77,7 +77,7 @@ class CharacterService {
             }
             const skill = skillId.join(':');
             yield models_1.Characters.update({ skill }, {
-                where: { characterId }
+                where: { characterId: Number(characterId) }
             });
         });
     }
@@ -91,7 +91,7 @@ class CharacterService {
             }
             const item = itemId.join(':');
             yield models_1.Characters.update({ item }, {
-                where: { characterId }
+                where: { characterId: Number(characterId) }
             });
         });
     }
@@ -101,7 +101,7 @@ class CharacterService {
     refreshStatus(characterId, damage, cost, monsterId) {
         return __awaiter(this, void 0, void 0, function* () {
             const result = yield models_1.Characters.findOne({
-                where: { characterId },
+                where: { characterId: Number(characterId) },
                 include: models_1.Users,
             });
             // const questId = await QuestCompletes.findOne()
@@ -128,12 +128,18 @@ class CharacterService {
     addExp(characterId, exp) {
         return __awaiter(this, void 0, void 0, function* () {
             const result = yield models_1.Characters.findOne({
-                where: { characterId },
+                where: { characterId: Number(characterId) },
                 include: models_1.Users,
             });
             if (!result)
                 throw new Error('존재하지 않는 캐릭터');
-            yield result.increment({ exp });
+            const reHp = result.hp + result.maxhp * 0.05;
+            const reMp = result.hp + result.maxmp * 0.2;
+            yield result.update({
+                exp: result.exp + exp,
+                hp: result.maxhp > reHp ? reHp : result.maxhp,
+                mp: result.maxmp > reMp ? reMp : result.maxmp,
+            });
             const level = models_1.Characters.levelCalc(result.get('exp') + exp, result.get('level'));
             let levelup = false;
             if (level > result.get('level')) {

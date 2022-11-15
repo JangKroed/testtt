@@ -42,7 +42,6 @@ function checkValidation(user) {
 ******************************************************************************/
 
 function loadScript(field, user) {
-    console.log(field,user)
     if (field === 'none' || user === '{}') {
         return server.emit('none', { line: 'LOAD', user: {} });
     }

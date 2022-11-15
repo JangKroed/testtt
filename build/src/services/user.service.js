@@ -14,7 +14,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 const bcrypt_1 = __importDefault(require("bcrypt"));
 const models_1 = require("../db/models");
-const config_1 = __importDefault(require("../db/redis/config"));
+const cache_1 = require("../db/cache");
 class UserService {
     signup({ username, password }) {
         return __awaiter(this, void 0, void 0, function* () {
@@ -50,7 +50,7 @@ class UserService {
         return __awaiter(this, void 0, void 0, function* () {
             console.log('SIGNOUT');
             // redis.hDelAll(id, { userId: 0, characterId: 0 });
-            config_1.default.del(id);
+            cache_1.redis.del(id);
         });
     }
     ;

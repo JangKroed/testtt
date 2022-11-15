@@ -34,43 +34,55 @@ class RedisCache {
     }
     set(key, value, option = {}) {
         return __awaiter(this, void 0, void 0, function* () {
-            yield this.client.set(key, value, option);
+            yield this.client.set(key.toString(), value, option);
         });
     }
     get(key) {
         return __awaiter(this, void 0, void 0, function* () {
-            return yield this.client.get(key);
+            return yield this.client.get(key.toString());
         });
     }
     del(key) {
         return __awaiter(this, void 0, void 0, function* () {
-            yield this.client.del(key);
+            yield this.client.del(key.toString());
         });
     }
     hSet(key, data) {
         return __awaiter(this, void 0, void 0, function* () {
-            yield this.client.hSet(key, data);
+            yield this.client.hSet(key.toString(), data);
         });
     }
     hGet(key, field) {
         return __awaiter(this, void 0, void 0, function* () {
-            return yield this.client.hGet(key, field);
+            return yield this.client.hGet(key.toString(), field);
         });
     }
     hGetAll(key) {
         return __awaiter(this, void 0, void 0, function* () {
-            return yield this.client.hGetAll(key);
+            return yield this.client.hGetAll(key.toString());
         });
     }
     hDel(key, field) {
         return __awaiter(this, void 0, void 0, function* () {
-            yield this.client.hDel(key, field);
+            yield this.client.hDel(key.toString(), field);
         });
     }
-    hDelAll(key, data) {
+    hDelBattleCache(key) {
         return __awaiter(this, void 0, void 0, function* () {
-            const fields = Object.keys(data);
-            yield this.client.hDel(key, [...fields]);
+            // const fields = Object.keys(data);
+            const fields = [
+                'characterId', 'dungeonLevel', 'monsterId', 'autoAttackId', 'quit', 'dead'
+            ];
+            yield this.client.hDel(key.toString(), [...fields]);
+        });
+    }
+    hDelResetCache(key) {
+        return __awaiter(this, void 0, void 0, function* () {
+            // const fields = Object.keys(data);
+            const fields = [
+                'characterId', 'monsterId', 'autoAttackId', 'quit', 'dead'
+            ];
+            yield this.client.hDel(key.toString(), [...fields]);
         });
     }
     disconnect() {

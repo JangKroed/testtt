@@ -1,10 +1,7 @@
 "use strict";
-var __importDefault = (this && this.__importDefault) || function (mod) {
-    return (mod && mod.__esModule) ? mod : { "default": mod };
-};
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.socket = void 0;
-const config_1 = __importDefault(require("./db/redis/config"));
+const cache_1 = require("./db/cache");
 const controller_1 = require("./controller");
 const onConnection = (server) => {
     console.log('SOCKET CONNECTED');
@@ -36,7 +33,7 @@ const onConnection = (server) => {
      ************************************************************************/
     server.on('submit', controller_1.chat.chatController);
     server.on('disconnect', () => {
-        config_1.default.del(server.id);
+        cache_1.redis.del(server.id);
         console.log(server.id, 'SOCKET DISCONNECTED');
     });
 };

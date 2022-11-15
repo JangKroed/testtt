@@ -8,25 +8,18 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
         step((generator = generator.apply(thisArg, _arguments || [])).next());
     });
 };
-var __importDefault = (this && this.__importDefault) || function (mod) {
-    return (mod && mod.__esModule) ? mod : { "default": mod };
-};
 Object.defineProperty(exports, "__esModule", { value: true });
 const express_1 = require("express");
 const router = (0, express_1.Router)();
-const config_1 = __importDefault(require("./db/redis/config"));
+const services_1 = require("./services");
+const handler_1 = require("./handler");
 router.get('/', (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
-    const dungeonSession = {
-        dungeonLevel: 999,
-        monsterId: 789
-    };
-    // await redis.hSet('222', dungeonSession);
-    const result = yield config_1.default.hGetAll('222');
-    console.log(result);
-    console.log(typeof result.dungeonLevel);
-    console.log(typeof result.monsterId);
+    // 스킬 정보 가져오기 & 사용할 스킬 선택 (cost 반비례 확률)
+    const { attack, skill } = yield services_1.CharacterService.findByPk(2);
+    const result = handler_1.battle.skillSelector(skill);
     res.status(200).json({
         message: 'API INDEX',
+        result,
     });
 }));
 exports.default = router;

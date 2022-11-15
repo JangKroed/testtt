@@ -1,13 +1,10 @@
 "use strict";
-var __importDefault = (this && this.__importDefault) || function (mod) {
-    return (mod && mod.__esModule) ? mod : { "default": mod };
-};
 Object.defineProperty(exports, "__esModule", { value: true });
 const socket_routes_1 = require("../socket.routes");
-const config_1 = __importDefault(require("../db/redis/config"));
+const cache_1 = require("../db/cache");
 exports.default = {
     chatController: ({ name, message, field }) => {
-        config_1.default.set(socket_routes_1.socket.id, name, { EX: 60 * 5 });
+        cache_1.redis.set(socket_routes_1.socket.id, name, { EX: 60 * 5 });
         const script = `${name}: ${message}\n`;
         socket_routes_1.socket.broadcast.emit('chat', { script, field });
         socket_routes_1.socket.emit('chat', { script, field });

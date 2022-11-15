@@ -8,13 +8,9 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
         step((generator = generator.apply(thisArg, _arguments || [])).next());
     });
 };
-var __importDefault = (this && this.__importDefault) || function (mod) {
-    return (mod && mod.__esModule) ? mod : { "default": mod };
-};
 Object.defineProperty(exports, "__esModule", { value: true });
 const services_1 = require("../../services");
-const config_1 = __importDefault(require("../../db/redis/config"));
-const encounter_Handler_1 = require("./encounter.Handler");
+const cache_1 = require("../../db/cache");
 exports.default = {
     // help: (CMD: string | undefined, user: UserSession) => {}
     battleHelp: (CMD, user) => {
@@ -45,29 +41,31 @@ exports.default = {
         return { script, user, field };
     },
     quitBattle: (CMD, user) => __awaiter(void 0, void 0, void 0, function* () {
-        const { characterId } = user;
-        const { monsterId } = yield config_1.default.hGetAll(String(characterId));
+        const characterId = user.characterId.toString();
+        const { monsterId } = yield cache_1.redis.hGetAll(characterId);
+        // const { monsterId } = battleCache.get(characterId);
         let tempScript = '';
         const tempLine = '========================================\n';
         tempScript += `당신은 도망쳤습니다. \n\n`;
         tempScript += `??? : 하남자특. 도망감.\n`;
         // 몬스터 삭제
-        services_1.MonsterService.destroyMonster(+monsterId, characterId);
+        services_1.MonsterService.destroyMonster(+monsterId, +characterId);
         const script = tempLine + tempScript;
         const field = 'dungeon';
         return { script, user, field };
     }),
     quitAutoBattle: (CMD, user) => __awaiter(void 0, void 0, void 0, function* () {
-        const { characterId } = user;
-        const { monsterId } = yield config_1.default.hGetAll(String(characterId));
+        const characterId = user.characterId.toString();
+        const { monsterId } = yield cache_1.redis.hGetAll(characterId);
         let tempScript = '';
         const tempLine = '========================================\n';
         tempScript += `전투를 중단하고 마을로 돌아갑니다. \n\n`;
         // 기본공격 중단 & 몬스터 삭제
-        const autoAttackId = encounter_Handler_1.battleLoops.get(characterId);
+        const { autoAttackId } = cache_1.battleCache.get(characterId);
         clearInterval(autoAttackId);
-        encounter_Handler_1.battleLoops.delete(characterId);
-        services_1.MonsterService.destroyMonster(+monsterId, characterId);
+        cache_1.battleCache.delete(characterId);
+        cache_1.redis.hDelBattleCache(characterId);
+        services_1.MonsterService.destroyMonster(+monsterId, +characterId);
         const script = tempLine + tempScript;
         const field = 'dungeon';
         return { script, user, field };
