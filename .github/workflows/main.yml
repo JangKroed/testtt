@@ -46,15 +46,15 @@ jobs:
         npm test
 
   deploy:
-    - name: CD Pipeline
-      runs-on: ubuntu-latest
+    name: CD Pipeline
+    runs-on: ubuntu-latest
 
-      strategy:
-          matrix:
-              node-version: [16.x, 18.x]
-    # 위의 buildAndTest가 실행되고 진행된다.
-      needs: buildAndTest
-      steps:
+    strategy:
+        matrix:
+            node-version: [16.x, 18.x]
+  # 위의 buildAndTest가 실행되고 진행된다.
+    needs: buildAndTest
+    steps:
       - uses: actions/checkout@v3
       # env 파일을 이용할 일이 보통 많은데,
       # Github Secrets를 이용하여 env 파일을 만들고 추가한다.
