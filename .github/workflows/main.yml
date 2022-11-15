@@ -98,7 +98,7 @@ jobs:
             # application_name과 environment_name을 꼭 확인하자!
             # 해당 부분은 꼭 같아야 한다!!
             - name: Deploy to EB
-              uses: einaregilsson/beanstalk-deploy@v16
+              uses: einaregilsson/beanstalk-deploy@v20
               with:
                   aws_access_key: ${{ secrets.AWS_ACCESS_KEY_ID }}
                   aws_secret_key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
