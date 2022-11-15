@@ -107,3 +107,4 @@ jobs:
                   region: ap-northeast-2
                   version_label: ${{github.run_id}}
                   deployment_package: deploy.zip
+                  use_existing_version_if_available: true
