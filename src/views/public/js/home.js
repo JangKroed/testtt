@@ -29,7 +29,7 @@ function checkStorage() {
         user = '{}';
     }
 
-    return new Promise((resolve, reject) => resolve({ field, user }));
+    return new Promise((resolve, reject ) => resolve({ field, user }));
 }
 
 function checkValidation(user) {
