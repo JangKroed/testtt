@@ -105,6 +105,6 @@ jobs:
                   application_name: great-app
                   environment_name: Greatapp-env-1
                   region: ap-northeast-2
-                  version_label: ${{github.run_id}}
+                  version_label: 12345
                   deployment_package: deploy.zip
                   use_existing_version_if_available: true
