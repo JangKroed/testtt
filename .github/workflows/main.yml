@@ -94,6 +94,19 @@ jobs:
             - name: Generate deployment package
               run: zip -r deploy.zip . -x '*.git*' './src/*' './__test__/*'
 
+            - name: Get timestamp
+              uses: gerred/actions/current-time@master
+              id: current-time
+
+            - name: Run string replace
+              uses: frabert/replace-string-action@master
+              id: format-time
+              with:
+                pattern: '[:\.]+'
+                string: "${{ steps.current-time.outputs.time }}"
+                replace-with: '-'
+                flags: 'g'
+
             # Deploy to Elastic Beanstalk
             # application_name과 environment_name을 꼭 확인하자!
             # 해당 부분은 꼭 같아야 한다!!
@@ -105,5 +118,5 @@ jobs:
                   application_name: great-app
                   environment_name: Greatapp-env-1
                   region: ap-northeast-2
-                  version_label: ${{github.SHA}}
+                  version_label: "great-${{ steps.format-time.outputs.replaced }}"
                   deployment_package: deploy.zip
