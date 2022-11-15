@@ -50,8 +50,8 @@ jobs:
     runs-on: ubuntu-latest
 
     strategy:
-        matrix:
-            node-version: [16.x, 18.x]
+      matrix:
+          node-version: [16.x, 18.x]
   # 위의 buildAndTest가 실행되고 진행된다.
     needs: buildAndTest
     steps:
