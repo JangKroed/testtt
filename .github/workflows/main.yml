@@ -100,11 +100,11 @@ jobs:
             - name: Deploy to EB
               uses: einaregilsson/beanstalk-deploy@v16
               with:
-                  aws_access_key: ${{ secrets.AWS_ACCESS_KEY_ID }}
-                  aws_secret_key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+                  aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+                  aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
                   application_name: great-app
                   environment_name: Greatapp-env-1
                   region: ap-northeast-2
-                  version_label: 12345
+                  version_label: ${{github.run_id}}
                   deployment_package: deploy.zip
                   use_existing_version_if_available: true
