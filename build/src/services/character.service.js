@@ -64,6 +64,8 @@ class CharacterService {
                 titleId: 1,
                 fieldId: 1,
                 name,
+                skill: '1',
+                item: '1:2',
             });
         });
     }
@@ -156,6 +158,14 @@ class CharacterService {
             }
             // const character = await Characters.getSessionData(result);
             return Object.assign(Object.assign({}, result.get()), { userId: result.User.getDataValue('userId'), username: result.User.getDataValue('username'), levelup, questId: 1, exp: result.get('exp') + exp });
+        });
+    }
+    deleteCharacter(userId, characterId) {
+        return __awaiter(this, void 0, void 0, function* () {
+            characterId = +characterId;
+            return yield models_1.Characters.destroy({
+                where: { userId, characterId }
+            });
         });
     }
 }

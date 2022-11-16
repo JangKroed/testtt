@@ -51,4 +51,25 @@ exports.default = {
         const field = 'front';
         return { script, user, field };
     },
+    deleteAccount: (CMD, user) => __awaiter(void 0, void 0, void 0, function* () {
+        console.log('EMPTY COMMAND');
+        const { userId, characterId } = user;
+        const result = yield services_1.UserService.deleteUser(userId, characterId);
+        const script = result === 1 ? scripts_1.homeScript.delete + scripts_1.homeScript.loadHome : scripts_1.homeScript.deleteFail;
+        const field = 'front';
+        return { script, user: emptySession, field };
+    }),
+};
+const emptySession = {
+    userId: 0,
+    username: '',
+    characterId: 0,
+    name: '',
+    level: 0,
+    maxhp: 0,
+    maxmp: 0,
+    hp: 0,
+    mp: 0,
+    exp: 0,
+    questId: 0,
 };

@@ -34,14 +34,12 @@ exports.default = {
         const { autoAttackId } = cache_1.battleCache.get(characterId);
         const { monsterId } = yield cache_1.redis.hGetAll(characterId);
         console.log(yield cache_1.redis.hGetAll(characterId));
-        if (!autoAttackId) {
-            return { script: '', field, user, error: true };
-        }
         // 유저&몬스터 정보 불러오기
         const { hp: playerHP, attack: playerDamage } = yield services_1.CharacterService.findByPk(characterId);
         const monster = yield models_1.Monsters.findByPk(monsterId);
-        if (!monster)
-            throw new Error('몬스터 정보 불러오기 실패');
+        if (!autoAttackId || !monster) {
+            return { script: '내부에러', field: 'dungeon', user, error: true };
+        }
         const { name: monsterName, hp: monsterHP, attack: monsterDamage, exp: monsterExp } = monster;
         // 유저 턴
         console.log('유저턴');
@@ -86,6 +84,7 @@ exports.default = {
         return { script, user, field };
     }),
     autoBattle: (CMD, user) => __awaiter(void 0, void 0, void 0, function* () {
+        console.timeEnd('AUTOBATTLEEEEEEEEEEEEEEEEEEE');
         let tempScript = '';
         let field = 'action';
         const { characterId } = user;
@@ -101,11 +100,13 @@ exports.default = {
         socket_routes_1.socket.emit('printBattle', { script: monsterCreatedScript, field, user });
         // 자동공격 사이클
         const autoAttackId = setInterval(() => __awaiter(void 0, void 0, void 0, function* () {
+            console.time('AUTOBATTLEEEEEEEEEEEEEEEEEEE');
             cache_1.battleCache.set(characterId, { autoAttackId });
             const { script, user: newUser, error } = yield __1.battle.autoAttack(CMD, user);
             // 이미 끝난 전투
             if (error)
-                return;
+                return console.timeEnd('AUTOBATTLEEEEEEEEEEEEEEEEEEE');
+            ;
             // 자동공격 스크립트 계속 출력?
             const field = 'autoBattle';
             socket_routes_1.socket.emit('printBattle', { script, field, user: newUser });
@@ -131,24 +132,21 @@ exports.default = {
                 // 스킬공격 사이클. 50% 확률로 발생
                 const chance = Math.random();
                 if (chance < 0.5)
-                    return;
-                console.log('스킬 사용ㅇㅇㅇㅇㅇㅇㅇㅇㅇ', yield cache_1.redis.hGetAll(characterId));
+                    return console.timeEnd('AUTOBATTLEEEEEEEEEEEEEEEEEEE');
+                ;
                 const { script, user, field } = yield __1.battle.autoBattleSkill(newUser);
                 const { dead } = yield cache_1.redis.hGetAll(characterId);
                 socket_routes_1.socket.emit('printBattle', { script, field, user });
                 if (dead) {
-                    console.log('스킬로 뒤짐ㅇㅇㅇㅇㅇㅇㅇㅇ', cache_1.battleCache.get(characterId));
                     const { autoAttackId } = cache_1.battleCache.get(characterId);
                     clearInterval(autoAttackId);
-                    console.log('스킬에 뒤짐ㅇㅇㅇㅇㅇ', yield cache_1.redis.hGetAll(characterId));
                     cache_1.battleCache.delete(characterId);
                     yield cache_1.redis.hDelResetCache(characterId);
-                    console.log('reset Cache', yield cache_1.redis.hGetAll(characterId));
-                    console.log('레디스 리셋ㅇㅇㅇㅇㅇ', yield cache_1.redis.hGetAll(characterId));
                     const { script, field, user } = yield whoIsDead[dead]('', newUser);
                     socket_routes_1.socket.emit('printBattle', { script, field, user });
                     return;
                 }
+                console.timeEnd('AUTOBATTLEEEEEEEEEEEEEEEEEEE');
             }
         }), 1500);
         // battleLoops.set(characterId, autoAttackId);

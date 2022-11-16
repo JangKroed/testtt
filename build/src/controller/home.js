@@ -32,6 +32,7 @@ exports.default = {
             DUNGEON: handler_1.front.toDungeon,
             V: handler_1.front.toVillage,
             VILLAGE: handler_1.front.toVillage,
+            DELETE: handler_1.front.deleteAccount,
             EMPTY: handler_1.front.emptyCommand,
         };
         if (!commandRouter[CMD1]) {

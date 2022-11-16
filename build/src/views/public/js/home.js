@@ -27,6 +27,7 @@ $(() => __awaiter(void 0, void 0, void 0, function* () {
 function checkStorage() {
     let field = localStorage.getItem('field');
     let user = localStorage.getItem('user');
+    // if (field !== 'dungeon' || field !== 'village' || !user || user==='{}') {
     if (field !== 'none' || !user || user === '{}') {
         field = 'none';
         user = '{}';

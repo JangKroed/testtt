@@ -15,6 +15,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const bcrypt_1 = __importDefault(require("bcrypt"));
 const models_1 = require("../db/models");
 const cache_1 = require("../db/cache");
+const _1 = require(".");
 class UserService {
     signup({ username, password }) {
         return __awaiter(this, void 0, void 0, function* () {
@@ -54,5 +55,15 @@ class UserService {
         });
     }
     ;
+    deleteUser(userId, characterId) {
+        return __awaiter(this, void 0, void 0, function* () {
+            const result = yield _1.CharacterService.deleteCharacter(+userId, +characterId);
+            if (result === 0)
+                return 0;
+            return yield models_1.Users.destroy({
+                where: { userId }
+            });
+        });
+    }
 }
 exports.default = new UserService();
