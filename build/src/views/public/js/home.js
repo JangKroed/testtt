@@ -78,7 +78,6 @@ function checkSkillCD(cooldown) {
 }
 server.on('print', printHandler);
 function printHandler({ script, user, field }) {
-    console.log(script, user, field);
     localStorage.setItem('user', JSON.stringify(user));
     localStorage.setItem('field', field);
     commandLine.append(script);
@@ -147,7 +146,6 @@ const chatEnterRoom = (field) => {
     chatBoxId.append(newMessage);
 };
 const chatNewMessage = ({ script, field }) => {
-    console.log('NEEEEEEEEEEEW', field, script);
     const newMessage = `<span>${script}</span>`;
     const currentField = localStorage.getItem('field');
     if (currentField.includes(field)) {

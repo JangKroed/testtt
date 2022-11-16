@@ -15,7 +15,6 @@ const handler_1 = require("../handler");
 exports.default = {
     dungeonController: ({ line, user }) => __awaiter(void 0, void 0, void 0, function* () {
         const [CMD1, CMD2] = line.trim().toUpperCase().split(' ');
-        console.log('inputCommand : ', CMD1, CMD2);
         const commandRouter = {
             LOAD: handler_1.dungeon.getDungeonList,
             목록: handler_1.dungeon.getDungeonList,
@@ -24,7 +23,6 @@ exports.default = {
             OUT: handler_1.front.signout,
         };
         if (!commandRouter[CMD1]) {
-            console.log(`is wrong command : '${CMD1}'`);
             const result = handler_1.dungeon.wrongCommand(CMD1, user);
             return socket_routes_1.socket.emit('print', result);
         }
@@ -35,7 +33,6 @@ exports.default = {
     }),
     villageController: ({ line, user }) => __awaiter(void 0, void 0, void 0, function* () {
         const [CMD1, CMD2] = line.trim().toUpperCase().split(' ');
-        console.log('inputCommand : ', CMD1, CMD2);
         const commandRouter = {
             LOAD: handler_1.dungeon.getDungeonList,
             목록: handler_1.dungeon.getDungeonList,
@@ -43,7 +40,6 @@ exports.default = {
             입장: handler_1.dungeon.getDungeonInfo,
         };
         if (!commandRouter[CMD1]) {
-            console.log(`is wrong command : '${CMD1}'`);
             const result = handler_1.dungeon.wrongCommand(CMD1, user);
             return socket_routes_1.socket.emit('print', result);
         }

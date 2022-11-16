@@ -31,7 +31,7 @@ export default {
 
         const { autoAttackId } = battleCache.get(characterId);
         const { monsterId } = await redis.hGetAll(characterId);
-console.log(await redis.hGetAll(characterId))
+
 
         // 유저&몬스터 정보 불러오기
         const { hp: playerHP, attack: playerDamage } = await CharacterService.findByPk(characterId);
@@ -44,7 +44,7 @@ console.log(await redis.hGetAll(characterId))
         const { name: monsterName, hp: monsterHP, attack: monsterDamage, exp: monsterExp } = monster;
 
         // 유저 턴
-        console.log('유저턴');
+        
         const playerHit = BattleService.hitStrength(playerDamage);
         const playerAdjective = BattleService.dmageAdjective(
             playerHit,
@@ -56,7 +56,7 @@ console.log(await redis.hGetAll(characterId))
         if (!isDead) throw new Error('몬스터 정보를 찾을 수 없습니다');
 
         if (isDead === 'dead') {
-            console.log('몬스터 사망');
+            
             // battleCache.set(characterId, { dead: 'monster' });
             await redis.hSet(characterId, { dead: 'monster' });
             const { script, field, user } = await battle.resultMonsterDead(monster, tempScript);
@@ -64,7 +64,7 @@ console.log(await redis.hGetAll(characterId))
         }
 
         // 몬스터 턴
-        console.log('몬스터 턴');
+        
         const monsterHit = BattleService.hitStrength(monsterDamage);
         const monsterAdjective = BattleService.dmageAdjective(
             monsterHit,
@@ -74,7 +74,7 @@ console.log(await redis.hGetAll(characterId))
 
         user = await CharacterService.refreshStatus(characterId, monsterHit, 0, monsterId);
         if (user.isDead === 'dead') {
-            console.log('유저 사망');
+            
 
             field = 'adventureResult';
             tempScript += '\n!! 치명상 !!\n';
@@ -103,12 +103,11 @@ console.log(await redis.hGetAll(characterId))
     },
 
     autoBattle: async(CMD: string | undefined, user: UserSession) => {
-        console.timeEnd('AUTOBATTLEEEEEEEEEEEEEEEEEEE')
 
         let tempScript = ''
         let field = 'action';
         const { characterId } = user;
-        console.log('autoBattleeeeeeeeeeeeeeeee', await redis.hGetAll(characterId))
+        
         const { dungeonLevel } = await redis.hGetAll(characterId);
         // const { dungeonLevel } = battleCache.get(characterId);
 
@@ -117,13 +116,12 @@ console.log(await redis.hGetAll(characterId))
         const monsterCreatedScript = `\n${name}이(가) 등장했습니다.\n\n`;
         await redis.hSet(characterId, { monsterId });
         // battleCache.set(characterId, dungeonSession);
-        console.log('몬스터 생성', await redis.hGetAll(characterId))
+        
 
         socket.emit('printBattle', { script: monsterCreatedScript, field, user })
 
         // 자동공격 사이클
         const autoAttackId = setInterval(async () => {
-            console.time('AUTOBATTLEEEEEEEEEEEEEEEEEEE');
 
             battleCache.set(characterId, { autoAttackId });
             const {script, user: newUser, error} = await battle.autoAttack(CMD, user);
@@ -174,7 +172,6 @@ console.log(await redis.hGetAll(characterId))
     
                     return;
                 }
-                console.timeEnd('AUTOBATTLEEEEEEEEEEEEEEEEEEE')
             }
         }, 1500);
 

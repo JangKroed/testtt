@@ -29,8 +29,6 @@ exports.default = {
         return { script, user, field };
     },
     getDungeonList: (CMD, user) => __awaiter(void 0, void 0, void 0, function* () {
-        console.log('dungeon list.');
-        console.timeEnd('AUTOBATTLEEEEEEEEEEEEEEEEEEE');
         const result = yield handler_1.front.checkUser(user);
         if (result) {
             const script = scripts_1.homeScript.loadHome;
@@ -49,7 +47,6 @@ exports.default = {
         return { script, user, field, chat: true };
     }),
     getDungeonInfo: (CMD, user) => {
-        console.log('dungeonInfo.');
         // 임시 스크립트 선언
         const tempLine = '=======================================================================\n';
         let tempScript = '';
@@ -95,7 +92,6 @@ exports.default = {
 function dungeonList(name) {
     // 던전 목록 불러오기
     const dungeonList = dungeon_service_1.default.getDungeonList();
-    console.log(dungeonList);
     // 임시 스크립트 선언
     const tempLine = '=======================================================================\n';
     let tempScript = '';

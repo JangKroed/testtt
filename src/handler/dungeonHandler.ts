@@ -21,8 +21,7 @@ export default {
     },
 
     getDungeonList: async(CMD: string | undefined, user: UserSession): Promise<ReturnScript> => {
-        console.log('dungeon list.');
-        console.timeEnd('AUTOBATTLEEEEEEEEEEEEEEEEEEE')
+        
 
         const result = await front.checkUser(user)
         if (result) {
@@ -46,7 +45,7 @@ export default {
     },
 
     getDungeonInfo: (CMD: string | undefined, user: UserSession) => {
-        console.log('dungeonInfo.');
+        
 
         // 임시 스크립트 선언
         const tempLine =
@@ -101,7 +100,7 @@ export default {
 export function dungeonList(name: string) {
     // 던전 목록 불러오기
     const dungeonList = DungeonService.getDungeonList();
-    console.log(dungeonList);
+    
 
     // 임시 스크립트 선언
     const tempLine =

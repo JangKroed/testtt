@@ -17,7 +17,7 @@ export default {
     
     frontController: async ({ line, user }: LineInput) => {
         const [CMD1, CMD2]: string[] = line.trim().toUpperCase().split(' ');
-        console.log('front', CMD1, CMD2);
+        
     
         const commandRouter: CommandRouter = {
             IN: front.signinUsername,

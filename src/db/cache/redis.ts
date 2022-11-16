@@ -15,11 +15,11 @@ class RedisCache {
         this.connect();
 
         this.client.on('connect', () => {
-            console.log('Redis connected');
+            
         });
 
         this.client.on('error', (error) => {
-            console.log('Redis error, service degraded: ', error);
+            
         });
     }
 
@@ -94,11 +94,11 @@ export default new RedisCache();
 //         });
 
 //         this.cache.on('connect', () => {
-//             console.log('Redis connected');
+//             
 //         });
 
 //         this.cache.on('error', (error) => {
-//             console.log('Redis error, service degraded: ', error);
+//             
 //         });
 //     }
 

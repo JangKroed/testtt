@@ -6,7 +6,7 @@ import { battle, chat, field, home } from './controller';
 export let socket: Socket;
 
 const onConnection = (server: Socket) => {
-    console.log('SOCKET CONNECTED');
+    
     socket = server;
 
     /************************************************************************
@@ -53,7 +53,7 @@ const onConnection = (server: Socket) => {
 
     server.on('disconnect', () => {
         redis.del(server.id);
-        console.log(server.id, 'SOCKET DISCONNECTED');
+        
     });
 };
 

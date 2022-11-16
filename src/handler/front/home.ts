@@ -6,7 +6,7 @@ import { homeScript } from "../../scripts";
 export default {
 
     loadHome: (CMD: string | undefined, user: UserSession) => {
-        console.log('LOAD HOME');
+        
     
         const script = homeScript.loadHome;
         const field = 'front'
@@ -14,7 +14,7 @@ export default {
     },
 
     checkUser: async(user: UserSession) => {
-        console.log('CHECK USER');
+        
         const { userId, characterId, name } = user;
         const character = await CharacterService.findOneByUserId(userId);
         
@@ -23,7 +23,7 @@ export default {
     },
 
     signout: (CMD: string | undefined, user: UserSession, id: string) => {
-        console.log('SIGN OUT');
+        
     
         UserService.signout(user.userId, id);
         const script = homeScript.signout;
@@ -32,7 +32,7 @@ export default {
     },
 
     toVillage: (CMD: string | undefined, user: UserSession) => {
-        console.log('TO VILLAGE');
+        
 
         const script = homeScript.loadHome; // 마을 스크립트
         const field = 'front'
@@ -40,7 +40,7 @@ export default {
     },
 
     toDungeon: (CMD: string | undefined, user: UserSession) => {
-        console.log('TO DUNGEON');
+        
     
         const script = dungeonList(user.name);
         const field = 'dungeon';
@@ -48,7 +48,7 @@ export default {
     },
 
     emptyCommand: (CMD: string | undefined, user: UserSession) => {
-        console.log('EMPTY COMMAND');
+        
     
         const script = homeScript.wrongCommand;
         const field = 'front'
@@ -56,7 +56,7 @@ export default {
     },
 
     deleteAccount: async(CMD: string | undefined, user: UserSession) => {
-        console.log('EMPTY COMMAND');
+        
 
         const { userId, characterId } = user;
         const result = await UserService.deleteUser(userId, characterId);

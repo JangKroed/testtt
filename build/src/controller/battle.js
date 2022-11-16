@@ -15,7 +15,6 @@ const cache_1 = require("../db/cache");
 exports.default = {
     battleController: ({ line, user }) => __awaiter(void 0, void 0, void 0, function* () {
         const [CMD1, CMD2] = line.trim().split(' ');
-        console.log('socketon battle');
         const commandRouter = {
             도움말: handler_1.battle.help,
             수동: handler_1.battle.encounter,
@@ -23,7 +22,6 @@ exports.default = {
             돌: handler_1.dungeon.getDungeonList,
         };
         if (!commandRouter[CMD1]) {
-            console.log(`is wrong command : '${CMD1}'`);
             const result = handler_1.battle.wrongCommand(CMD1, user);
             return socket_routes_1.socket.emit('print', result);
         }
@@ -32,7 +30,6 @@ exports.default = {
     }),
     encounterController: ({ line, user }) => __awaiter(void 0, void 0, void 0, function* () {
         const [CMD1, CMD2] = line.trim().split(' ');
-        console.log('socketon enccounter');
         const commandRouter = {
             load: handler_1.battle.encounter,
             도움말: handler_1.battle.ehelp,
@@ -40,7 +37,6 @@ exports.default = {
             도망: handler_1.battle.quitBattle,
         };
         if (!commandRouter[CMD1]) {
-            console.log(`is wrong command : '${CMD1}'`);
             const result = handler_1.battle.wrongCommand(CMD1, user);
             return socket_routes_1.socket.emit('print', result);
         }
@@ -82,13 +78,11 @@ exports.default = {
     }),
     autoBattleController: ({ line, user }) => __awaiter(void 0, void 0, void 0, function* () {
         const [CMD1, CMD2] = line.trim().split(' ');
-        console.log('socketon enccounter');
         const commandRouter = {
             도움말: handler_1.battle.autoBattleHelp,
             중단: handler_1.battle.quitAutoBattle,
         };
         if (!commandRouter[CMD1]) {
-            console.log(`is wrong command : '${CMD1}'`);
             const result = yield commandRouter['도움말'](CMD1, user);
             return socket_routes_1.socket.emit('print', result);
         }
@@ -104,7 +98,6 @@ exports.default = {
             마을: handler_1.battle.returnVillage,
         };
         if (!commandRouter[CMD1]) {
-            console.log(`is wrong command : '${CMD1}'`);
             const result = handler_1.battle.adventureWrongCommand(CMD1, user);
             return socket_routes_1.socket.emit('print', result);
         }
@@ -136,7 +129,7 @@ exports.default = {
 //         result = await newScript[result.dead](CMD2, user);
 //     }
 // } else if (!commandRouter[CMD1]) {
-//     console.log(`is wrong command : '${CMD1}'`);
+//     
 //     result = battle.ewrongCommand(CMD1, user);
 // } else {
 //     result = await commandRouter[CMD1](CMD2, user);

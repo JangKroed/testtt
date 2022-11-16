@@ -4,7 +4,6 @@ exports.socket = void 0;
 const cache_1 = require("./db/cache");
 const controller_1 = require("./controller");
 const onConnection = (server) => {
-    console.log('SOCKET CONNECTED');
     exports.socket = server;
     /************************************************************************
                                     홈
@@ -34,7 +33,6 @@ const onConnection = (server) => {
     server.on('submit', controller_1.chat.chatController);
     server.on('disconnect', () => {
         cache_1.redis.del(server.id);
-        console.log(server.id, 'SOCKET DISCONNECTED');
     });
 };
 exports.default = onConnection;

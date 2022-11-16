@@ -8,7 +8,7 @@ export default {
 
     battleController: async ({ line, user }: LineInput) => {
         const [CMD1, CMD2]: string[] = line.trim().split(' ');
-        console.log('socketon battle');
+        
 
         const commandRouter: CommandRouter = {
             도움말: battle.help,
@@ -18,7 +18,7 @@ export default {
         };
 
         if (!commandRouter[CMD1]) {
-            console.log(`is wrong command : '${CMD1}'`);
+            
             const result = battle.wrongCommand(CMD1, user);
             return socket.emit('print', result);
         }
@@ -29,7 +29,7 @@ export default {
 
     encounterController: async ({ line, user }: LineInput) => {
         const [CMD1, CMD2]: string[] = line.trim().split(' ');
-        console.log('socketon enccounter');
+        
 
         const commandRouter: CommandRouter = {
             load: battle.encounter,
@@ -38,7 +38,7 @@ export default {
             도망: battle.quitBattle,
         };
         if (!commandRouter[CMD1]) {
-            console.log(`is wrong command : '${CMD1}'`);
+            
             const result = battle.wrongCommand(CMD1, user);
             return socket.emit('print', result);
         }
@@ -88,14 +88,14 @@ export default {
 
     autoBattleController: async ({ line, user }: LineInput) => {
         const [CMD1, CMD2]: string[] = line.trim().split(' ');
-        console.log('socketon enccounter');
+        
 
         const commandRouter: CommandRouter = {
             도움말: battle.autoBattleHelp,
             중단: battle.quitAutoBattle,
         };
         if (!commandRouter[CMD1]) {
-            console.log(`is wrong command : '${CMD1}'`);
+            
             const result = await commandRouter['도움말'](CMD1, user);
             return socket.emit('print', result);
         }
@@ -115,7 +115,7 @@ export default {
         };
 
         if (!commandRouter[CMD1]) {
-            console.log(`is wrong command : '${CMD1}'`);
+            
             const result = battle.adventureWrongCommand(CMD1, user);
             return socket.emit('print', result);
         }
@@ -160,7 +160,7 @@ export default {
         //         result = await newScript[result.dead](CMD2, user);
         //     }
         // } else if (!commandRouter[CMD1]) {
-        //     console.log(`is wrong command : '${CMD1}'`);
+        //     
         //     result = battle.ewrongCommand(CMD1, user);
         // } else {
         //     result = await commandRouter[CMD1](CMD2, user);

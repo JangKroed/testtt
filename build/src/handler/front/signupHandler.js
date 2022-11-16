@@ -28,7 +28,6 @@ exports.default = {
         return { script, user, field };
     }),
     createUser: (CMD, user, id) => __awaiter(void 0, void 0, void 0, function* () {
-        console.log('CREATE USER');
         const userCreated = yield services_1.UserService.signup({ username: user.username, password: CMD });
         user.userId = userCreated.getDataValue('userId');
         const script = scripts_1.signupScript.create;
@@ -36,7 +35,6 @@ exports.default = {
         return { script, user, field };
     }),
     createCharacter: (CMD, user, id) => __awaiter(void 0, void 0, void 0, function* () {
-        console.log('CREATE CHARACTER');
         const name = CMD;
         const userId = user.userId;
         const character = yield services_1.CharacterService.createNewCharacter({ name, userId });

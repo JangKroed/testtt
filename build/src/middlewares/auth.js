@@ -24,7 +24,6 @@ exports.default = {
         if (!ip) {
             throw new common_1.HttpException('잘못된 접근입니다', common_1.HttpStatus.BAD_REQUEST);
         }
-        console.log(ip);
         const sessionData = yield cache_1.redis.get(ip);
         if (!sessionData) {
             req.app.locals.user = null;

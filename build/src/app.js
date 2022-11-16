@@ -29,10 +29,8 @@ io.on('connection', socket_routes_1.default);
 if (config_env_1.default.NODE_ENV !== 'test') {
     connection_1.default.authenticate().then(() => {
         (0, associate_1.default)();
-        console.log('DB CONNECTED');
     }).catch((error) => {
         console.error(error);
-        console.log('DB CONNECTION FAIL');
         process.exit(0);
     });
 }

@@ -25,7 +25,7 @@ export default {
     },
 
     createUser: async (CMD: string | undefined, user: UserSession, id: string) => {
-        console.log('CREATE USER');
+        
         const userCreated = await UserService.signup({ username: user.username, password: CMD });
         
         user.userId = userCreated.getDataValue('userId');    
@@ -35,7 +35,7 @@ export default {
     },
 
     createCharacter: async (CMD: string | undefined, user: UserSession, id: string) => {
-        console.log('CREATE CHARACTER');
+        
         const name = CMD!;
         const userId = user.userId;
         const character = await CharacterService.createNewCharacter({ name, userId });

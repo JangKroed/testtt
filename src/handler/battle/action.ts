@@ -94,7 +94,7 @@ class BattleAction {
         if (!isDead) throw new Error('몬스터 정보를 찾을 수 없습니다');
 
         if (isDead === 'dead') {
-            console.log('몬스터 사망');
+            
             // battleCache.set(characterId, { dead: 'monster' });
             await redis.hSet(characterId, { dead: 'monster' });
             return await battle.resultMonsterDead(monster, tempScript);
@@ -141,7 +141,7 @@ class BattleAction {
         tempScript += `\n당신의 ${skillName} 스킬이 ${monsterName}에게 적중! => ${realDamage}의 데미지!\n`;
 
         if (isDead === 'dead') {
-            console.log('몬스터 사망');
+            
             // battleCache.set(characterId, { dead: 'monster' });
             await redis.hSet(characterId, { dead: 'monster' });
             return await battle.resultMonsterDead(monster, tempScript);
@@ -166,7 +166,7 @@ class BattleAction {
         for (let i=0; i<skillCounts; i++) {
             const singleChance = (costSum / skillCosts[i]) / chanceSum
             cumChance += singleChance;
-            console.log(chance, cumChance)
+            
             if (chance <= cumChance) {
                 skillIndex = i;
                 break;
@@ -177,7 +177,7 @@ class BattleAction {
     }
 
     run = async (CMD: string | undefined, user: UserSession) => {
-        console.log('도망 실행');
+        
         const characterId = user.characterId.toString();
         let tempScript: string = '';
         const tempLine =

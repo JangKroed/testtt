@@ -23,7 +23,6 @@ exports.default = {
     },
     frontController: ({ line, user }) => __awaiter(void 0, void 0, void 0, function* () {
         const [CMD1, CMD2] = line.trim().toUpperCase().split(' ');
-        console.log('front', CMD1, CMD2);
         const commandRouter = {
             IN: handler_1.front.signinUsername,
             UP: handler_1.front.signupUsername,

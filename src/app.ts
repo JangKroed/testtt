@@ -31,10 +31,10 @@ io.on('connection', onConnection);
 if (env.NODE_ENV !== 'test') {
     sequelize.authenticate().then(() => {
         associate();
-        console.log('DB CONNECTED');
+        
     }).catch((error) => {
         console.error(error);
-        console.log('DB CONNECTION FAIL');
+        
     
         process.exit(0);
     });    

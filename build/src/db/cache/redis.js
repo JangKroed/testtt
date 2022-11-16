@@ -21,10 +21,8 @@ class RedisCache {
         });
         this.connect();
         this.client.on('connect', () => {
-            console.log('Redis connected');
         });
         this.client.on('error', (error) => {
-            console.log('Redis error, service degraded: ', error);
         });
     }
     connect() {
@@ -104,10 +102,10 @@ exports.default = new RedisCache();
 //             url: `redis://${env.REDIS_USER}:${env.REDIS_PASSWORD}@${env.REDIS_HOST}`
 //         });
 //         this.cache.on('connect', () => {
-//             console.log('Redis connected');
+//             
 //         });
 //         this.cache.on('error', (error) => {
-//             console.log('Redis error, service degraded: ', error);
+//             
 //         });
 //     }
 //     async get<T>(key: string, fetcher: ()=>Promise<T>): Promise<T> {

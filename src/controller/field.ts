@@ -8,7 +8,7 @@ export default {
 
     dungeonController: async ({ line, user }: LineInput) => {
         const [CMD1, CMD2]: string[] = line.trim().toUpperCase().split(' ');
-        console.log('inputCommand : ', CMD1, CMD2);
+        
 
         const commandRouter: CommandRouter = {
             LOAD: dungeon.getDungeonList,
@@ -18,7 +18,7 @@ export default {
             OUT: front.signout,
         };
         if (!commandRouter[CMD1]) {
-            console.log(`is wrong command : '${CMD1}'`);
+            
             const result = dungeon.wrongCommand(CMD1, user);
             return socket.emit('print', result);
         }
@@ -29,7 +29,7 @@ export default {
 
     villageController: async ({ line, user }: LineInput) => {
         const [CMD1, CMD2]: string[] = line.trim().toUpperCase().split(' ');
-        console.log('inputCommand : ', CMD1, CMD2);
+        
 
         const commandRouter: CommandRouter = {
             LOAD: dungeon.getDungeonList,
@@ -38,7 +38,7 @@ export default {
             입장: dungeon.getDungeonInfo,
         };
         if (!commandRouter[CMD1]) {
-            console.log(`is wrong command : '${CMD1}'`);
+            
             const result = dungeon.wrongCommand(CMD1, user);
             return socket.emit('print', result);
         }

@@ -10,7 +10,7 @@ describe('api test', () => {
     const OLD_ENV = process.env;
 
     beforeAll(async()=>{
-        console.log(env);
+        
         await sequelize.authenticate();
         association();
     });
