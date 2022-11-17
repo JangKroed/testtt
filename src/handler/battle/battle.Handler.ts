@@ -126,7 +126,6 @@ export default {
             battleCache.set(characterId, { autoAttackId });
             const {script, user: newUser, error} = await battle.autoAttack(CMD, user);
             // 이미 끝난 전투
-            if (error) return console.timeEnd('AUTOBATTLEEEEEEEEEEEEEEEEEEE');;
 
             // 자동공격 스크립트 계속 출력?
             const field = 'autoBattle';
@@ -154,7 +153,6 @@ export default {
             } else {
                 // 스킬공격 사이클. 50% 확률로 발생
                 const chance = Math.random();
-                if (chance < 0.5) return console.timeEnd('AUTOBATTLEEEEEEEEEEEEEEEEEEE');;
 
                 const { script, user, field} = await battle.autoBattleSkill(newUser);
                 const { dead } = await redis.hGetAll(characterId);

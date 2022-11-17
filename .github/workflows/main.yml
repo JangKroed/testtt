@@ -101,7 +101,7 @@ jobs:
 
       # Deploy to Elastic Beanstalk
       - name: Deploy to EB
-        uses: einaregilsson/beanstalk-deploy@v20
+        uses: einaregilsson/beanstalk-deploy@v21
         with:
           aws_access_key: ${{ secrets.AWS_ACCESS_KEY_ID }}
           aws_secret_key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
@@ -110,4 +110,5 @@ jobs:
           region: ap-northeast-2
           version_label: ${{ steps.current-time.outputs.formattedTime }}
           deployment_package: deploy.zip
-          wait_for_environment_recovery: 300
+          wait_for_deployment: false # CD중 배포완료를 기다리지 않는다.
+          wait_for_environment_recovery: 300 # 배포 후 healthy한 상태로 돌아가길 기다리는 시간 설정
